@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabachin Store | Centro de Control y Cotizaciones</title>
+    <!-- Tipografías de Lujo: Cormorant Garamond (Old Money Editorial) + Plus Jakarta Sans (Números Modernos y Nítidos) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Paleta Old Money + Estructura Moderna Redondeada */
+        :root {
+            --bg-base: #F5F2EB; /* Marfil / Pergamino de lujo */
+            --bg-panel: #FFFFFF; /* Blanco puro para contraste limpio */
+            --accent-green: #14281D; /* Verde Británico / Hunter Green profundo */
+            --accent-gold: #B89758; /* Oro Champagne elegante */
+            --gold-light: rgba(184, 151, 88, 0.12);
+            --text-main: #1E2321; /* Carbón casi negro */
+            --text-muted: #646E68; /* Gris pizarra suave */
+            --success: #2A5A3B; /* Verde esmeralda sobrio */
+            --warning: #967224; /* Dorado oscuro */
+            --danger: #802626; /* Borgoña oscuro */
+            --border-color: #E6E1D6;
+            --radius-card: 22px; /* Redondeado moderno y fluido */
+            --radius-elem: 14px; /* Botones e inputs suaves */
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            padding: 25px 15px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Fuentes y estilo de números */
+        h1, h2, h3, .brand-font {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Secreto para números modernos: alineación tabular perfecta */
+        .num, input, span, strong, div {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Barra Superior */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 30px;
+            background: var(--bg-panel);
+            border-radius: var(--radius-card);
+            box-shadow: 0 10px 30px rgba(20, 40, 29, 0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--accent-green);
+            text-transform: uppercase;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--gold-light);
+            padding: 8px 16px;
+            border-radius: 30px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.6; }
+        }
+
+        /* Diseño de Paneles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 850px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border-radius: var(--radius-card);
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(20, 40, 29, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .panel-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        /* Formularios Modernos Redondeados */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            background: #FAFAFA;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-elem);
+            color: var(--text-main);
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 4px var(--gold-light);
+        }
+
+        /* Botones de Selección */
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 14px 10px;
+            border: none;
+            border-radius: var(--radius-elem);
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .btn-option {
+            background: #FAFAFA;
+            color: var(--accent-green);
+            border: 1.5px solid var(--border-color);
+        }
+
+        .btn-option:hover {
+            border-color: var(--accent-gold);
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-option.active {
+            background: var(--accent-green);
+            color: #FFFFFF;
+            border-color: var(--accent-green);
+            box-shadow: 0 6px 15px rgba(20, 40, 29, 0.2);
+        }
+
+        .btn-action {
+            background: var(--accent-gold);
+            color: #FFFFFF;
+            width: 100%;
+            padding: 18px;
+            margin-top: 25px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-radius: var(--radius-elem);
+            box-shadow: 0 8px 20px rgba(184, 151, 88, 0.25);
+        }
+
+        .btn-action:hover {
+            background: #a68547;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(184, 151, 88, 0.35);
+        }
+
+        /* Panel Privado Interno */
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .data-row span:last-child {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .highlight-box {
+            background: var(--bg-base);
+            padding: 22px;
+            border-radius: var(--radius-elem);
+            margin-top: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        .highlight-box h3 {
+            font-size: 1.2rem;
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .profit-text {
+            color: var(--success) !important;
+            font-size: 1.1rem;
+            font-weight: 800 !important;
+        }
+
+        /* ================= TICKET GABACHIN STORE (Para el Cliente) ================= */
+        .ticket-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-base);
+        }
+
+        .ticket {
+            background: #FFFFFF;
+            color: var(--text-main);
+            padding: 35px 30px;
+            border-radius: var(--radius-card);
+            width: 100%;
+            display: none;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(20, 40, 29, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Brillo decorativo Old Money en el borde superior del ticket */
+        .ticket::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-gold), var(--accent-green));
+        }
+
+        .ticket-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .ticket-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            letter-spacing: 3px;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .ticket-subtitle {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        .ticket-divider {
+            border-top: 1px dashed var(--border-color);
+            margin: 20px 0;
+        }
+
+        .ticket-total-box {
+            background: var(--bg-base);
+            padding: 18px 20px;
+            border-radius: var(--radius-elem);
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .ticket-total-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--accent-green);
+            letter-spacing: 1px;
+        }
+
+        .ticket-total-amount {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent-green);
+        }
+
+        .payment-breakdown {
+            background: #FAFAFA;
+            padding: 20px;
+            border-radius: var(--radius-elem);
+            border: 1px solid var(--border-color);
+        }
+
+        .badge-status {
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .badge-50 {
+            background: var(--accent-gold);
+            color: #FFFFFF;
+        }
+
+        .badge-100 {
+            background: var(--accent-green);
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-bar">
+        <div class="logo brand-font">Gabachin Store</div>
+        <div class="sync-status">
+            <div class="dot"></div>
+            Sincronizado
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <!-- PANEL DE CONTROL INTERNO (Calculadora Privada) -->
+        <section class="panel">
+            <h2 class="panel-title">Módulo de Cotización</h2>
+            
+            <div class="input-group">
+                <label>Artículo / Cliente</label>
+                <input type="text" id="productName" placeholder="Ej. Reloj de Vestir - Carlos M.">
+            </div>
+
+            <div class="input-group">
+                <label>Precio en Tienda (USD)</label>
+                <input type="number" id="productPrice" placeholder="0.00">
+            </div>
+
+            <div class="input-group">
+                <label>Margen de Servicio</label>
+                <div class="btn-grid">
+                    <button class="btn-option btn-margin" onclick="setMargin(0.20)">+20%</button>
+                    <button class="btn-option btn-margin" onclick="setMargin(0.25)">+25%</button>
+                    <button class="btn-option btn-margin" onclick="setMargin(0.30)">+30%</button>
+                    <button class="btn-option btn-margin" onclick="setMargin(1.00)">Doble</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Esquema de Pago del Cliente</label>
+                <div class="payment-grid">
+                    <button class="btn-option btn-payment" id="pay50" onclick="setPaymentMode('50/50')">Anticipo 50%</button>
+                    <button class="btn-option btn-payment" id="pay100" onclick="setPaymentMode('100')">Liquidación 100%</button>
+                </div>
+            </div>
+
+            <button class="btn-action" onclick="calculate()">Generar Ticket Oficial</button>
+
+            <!-- Desglose Interno Oculto al Cliente -->
+            <div class="highlight-box">
+                <h3 class="brand-font">Libro Contable (Privado)</h3>
+                <div class="data-row"><span>Costo Tienda + Tax (7%):</span> <span id="intBaseCost">$0.00 USD</span></div>
+                <div class="data-row"><span>Logística y Gestión:</span> <span>$5.00 USD</span></div>
+                <div class="data-row" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                    <span>Inversión Real a Realizar:</span> <span id="intRealInvestment">$0.00 USD</span>
+                </div>
+                <div class="data-row" style="margin-top: 12px;">
+                    <span>Anticipo del Cliente:</span> <span id="intAdvance" style="color: var(--warning);">$0.00 USD</span>
+                </div>
+                <div class="data-row">
+                    <span>Inversión de tu Bolsillo:</span> <span id="intPocketCost">$0.00 USD</span>
+                </div>
+                <div class="data-row" style="margin-top: 10px;">
+                    <span>Ganancia Neta Libre:</span> <span id="intProfit" class="profit-text">$0.00 MXN</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TICKET OFICIAL GABACHIN STORE (Para enviar al Cliente) -->
+        <section class="panel ticket-wrapper">
+            <div id="ticketView" class="ticket">
+                
+                <!-- Encabezado Oficial del Ticket -->
+                <div class="ticket-header">
+                    <div class="ticket-brand">GABACHIN STORE</div>
+                    <div class="ticket-subtitle">Del gabacho a tu casa</div>
+                </div>
+
+                <div class="data-row"><span>Artículo:</span> <span id="tkProduct" style="font-weight: 800; color: var(--accent-green);">-</span></div>
+                <div class="data-row"><span>Tipo de Cambio:</span> <span>$21.00 MXN</span></div>
+                <div class="data-row"><span>Valor en Dólares:</span> <span id="tkTotalUSD">$0.00 USD</span></div>
+                
+                <!-- Caja de Total Destacada -->
+                <div class="ticket-total-box">
+                    <div class="ticket-total-label">Total a Pagar</div>
+                    <div class="ticket-total-amount" id="tkTotalMXN">$0.00 MXN</div>
+                </div>
+
+                <!-- Sección de Anticipos / Pagos -->
+                <div class="payment-breakdown" id="paymentBreakdownContainer">
+                    <div class="data-row" style="margin-bottom: 8px;">
+                        <span style="color: var(--accent-green); font-weight: 700;">Anticipo Requerido:</span> 
+                        <span id="tkAdvance" style="font-weight: 800; color: var(--accent-green); font-size: 1.05rem;">$0.00 MXN</span>
+                    </div>
+                    <div class="data-row" id="tkBalanceRow" style="margin-bottom: 0;">
+                        <span>Saldo Contra Entrega:</span> 
+                        <span id="tkBalance" style="font-weight: 800;">$0.00 MXN</span>
+                    </div>
+                    <div id="tkBadge" class="badge-status">Anticipo 50% Requerido</div>
+                </div>
+
+            </div>
+            
+            <p id="placeholderText" style="color: var(--text-muted); text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic;">
+                Completa los datos para generar el recibo de Gabachin Store.
+            </p>
+        </section>
+    </main>
+
+    <script>
+        const EXCHANGE_RATE = 21.00;
+        const TAX_RATE = 0.07;
+        const LOGISTICS_COST_USD = 5.00;
+        
+        let selectedMargin = 0;
+        let paymentMode = '50/50';
+
+        document.getElementById('pay50').classList.add('active');
+
+        function setMargin(margin) {
+            selectedMargin = margin;
+            document.querySelectorAll('.btn-margin').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function setPaymentMode(mode) {
+            paymentMode = mode;
+            document.querySelectorAll('.btn-payment').forEach(btn => btn.classList.remove('active'));
+            if (mode === '50/50') {
+                document.getElementById('pay50').classList.add('active');
+            } else {
+                document.getElementById('pay100').classList.add('active');
+            }
+        }
+
+        function calculate() {
+            const name = document.getElementById('productName').value || "Artículo sin especificar";
+            const priceUSD = parseFloat(document.getElementById('productPrice').value);
+
+            if (isNaN(priceUSD) || priceUSD <= 0) {
+                alert("Por favor, ingresa un precio válido en tienda.");
+                return;
+            }
+            if (selectedMargin === 0) {
+                alert("Por favor, selecciona un margen de servicio.");
+                return;
+            }
+
+            // 1. Costo real del producto y logística
+            const taxAmount = priceUSD * TAX_RATE;
+            const baseCost = priceUSD + taxAmount;
+            const realInvestmentUSD = baseCost + LOGISTICS_COST_USD;
+            
+            // 2. Precios finales
+            const profitUSD = realInvestmentUSD * selectedMargin;
+            const finalPriceUSD = realInvestmentUSD + profitUSD;
+            const finalPriceMXN = finalPriceUSD * EXCHANGE_RATE;
+            const profitMXN = profitUSD * EXCHANGE_RATE;
+
+            // 3. Flujo de dinero según esquema
+            let advanceMXN = 0;
+            let balanceMXN = 0;
+            let advanceUSD = 0;
+            let pocketCostUSD = 0;
+
+            if (paymentMode === '50/50') {
+                advanceMXN = finalPriceMXN / 2;
+                balanceMXN = finalPriceMXN / 2;
+                advanceUSD = finalPriceUSD / 2;
+                
+                if (advanceUSD < realInvestmentUSD) {
+                    pocketCostUSD = realInvestmentUSD - advanceUSD;
+                }
+            } else {
+                advanceMXN = finalPriceMXN;
+                balanceMXN = 0;
+                advanceUSD = finalPriceUSD;
+                pocketCostUSD = 0;
+            }
+
+            // Formateador de números limpios
+            const fmtUSD = (num) => `$${num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD`;
+            const fmtMXN = (num) => `$${num.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2})} MXN`;
+
+            // 4. Actualizar Libro Contable (Tu panel)
+            document.getElementById('intBaseCost').innerText = fmtUSD(baseCost);
+            document.getElementById('intRealInvestment').innerText = fmtUSD(realInvestmentUSD);
+            document.getElementById('intAdvance').innerText = fmtUSD(advanceUSD);
+            
+            const pocketText = document.getElementById('intPocketCost');
+            pocketText.innerText = fmtUSD(pocketCostUSD);
+            if (pocketCostUSD > 0) {
+                pocketText.style.color = 'var(--danger)';
+            } else {
+                pocketText.style.color = 'var(--success)';
+                pocketText.innerText = "$0.00 USD (Inversión Cero)";
+            }
+            
+            document.getElementById('intProfit').innerText = `${fmtUSD(profitUSD)} / ${fmtMXN(profitMXN)}`;
+
+            // 5. Actualizar Ticket Oficial de Gabachin Store
+            document.getElementById('tkProduct').innerText = name;
+            document.getElementById('tkTotalUSD').innerText = fmtUSD(finalPriceUSD);
+            document.getElementById('tkTotalMXN').innerText = fmtMXN(finalPriceMXN);
+            document.getElementById('tkAdvance').innerText = fmtMXN(advanceMXN);
+            document.getElementById('tkBalance').innerText = fmtMXN(balanceMXN);
+
+            const balanceRow = document.getElementById('tkBalanceRow');
+            const badge = document.getElementById('tkBadge');
+
+            if (paymentMode === '50/50') {
+                balanceRow.style.display = 'flex';
+                badge.className = "badge-status badge-50";
+                badge.innerText = "Anticipo 50% Requerido";
+            } else {
+                balanceRow.style.display = 'none';
+                badge.className = "badge-status badge-100";
+                badge.innerText = "Liquidado al 100% (Inversión Cero)";
+            }
+
+            document.getElementById('placeholderText').style.display = 'none';
+            document.getElementById('ticketView').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
