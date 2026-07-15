@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gabachin Store | Sistema de Punto de Venta</title>
-    <!-- Fuentes: DM Sans (Panel), Playfair (Logos), DM Mono (Recibo Realista), Libre Barcode 128 (Código de Barras) -->
+    <title>Gabachin Store | Sistema Unificado</title>
+    <!-- Fuentes: DM Sans, Playfair Display, DM Mono, Libre Barcode 128 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Libre+Barcode+128&display=swap" rel="stylesheet">
-    
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Variables - OLD MONEY VIBES (Panel de Control) */
         :root {
@@ -27,221 +27,258 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             background-color: var(--bg-base);
             color: var(--text-main);
             font-family: 'DM Sans', sans-serif;
             min-height: 100vh;
             padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         h1, h2, h3, .logo { font-family: 'Playfair Display', serif; }
 
-        /* Header */
+        /* Componentes base tomados del estilo original */
+        .glass-panel {
+            background: var(--bg-panel); border-radius: var(--radius-card); padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
+        }
+        
         .top-bar {
             display: flex; justify-content: space-between; align-items: center;
             padding: 18px 30px; background: var(--bg-panel);
             border-radius: var(--radius-card); box-shadow: 0 8px 30px rgba(0,0,0,0.04);
             border: 1px solid var(--border-color);
+            margin-bottom: 25px;
         }
         .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; color: var(--accent-primary); }
         .sync-status { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
         .dot { width: 8px; height: 8px; background-color: var(--accent-gold); border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
 
-        .dashboard-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 25px; }
-        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
-
-        /* Panel Izquierdo */
-        .panel {
-            background: var(--bg-panel); border-radius: var(--radius-card); padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
-        }
-        .panel-title { font-size: 1.3rem; color: var(--accent-primary); margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-        .input-group { margin-bottom: 20px; }
+        /* Estilos de inputs y botones de la calculadora POS original */
         .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
-        input {
-            width: 100%; padding: 14px 18px; background: #F9F8F5; border: 1px solid var(--border-color);
+        .custom-input {
+            width: 100%; padding: 12px 16px; background: #F9F8F5; border: 1px solid var(--border-color);
             border-radius: var(--radius-btn); color: var(--text-main); font-size: 1rem; transition: var(--transition);
         }
-        input:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(176, 146, 90, 0.1); }
-        .btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
-        .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        button { cursor: pointer; padding: 12px; border: none; border-radius: var(--radius-btn); font-weight: 600; transition: var(--transition); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; }
-        .btn-option { background: transparent; color: var(--accent-primary); border: 2px solid var(--border-color); }
+        .custom-input:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(176, 146, 90, 0.1); }
+        
+        .btn-option { cursor: pointer; padding: 10px; border: 2px solid var(--border-color); border-radius: var(--radius-btn); font-weight: 600; transition: var(--transition); font-family: 'DM Sans', sans-serif; font-size: 0.90rem; background: transparent; color: var(--accent-primary); text-align: center; }
         .btn-option:hover { border-color: var(--accent-gold); color: var(--accent-gold); transform: translateY(-2px); }
         .btn-option.active { background: var(--accent-primary); color: #FFFFFF; border-color: var(--accent-primary); }
-        .btn-action { background: var(--accent-gold); color: #FFFFFF; width: 100%; padding: 16px; margin-top: 25px; font-size: 1.1rem; border-radius: var(--radius-btn); }
+        
+        .btn-action { cursor: pointer; background: var(--accent-gold); color: #FFFFFF; width: 100%; padding: 14px; font-size: 1.05rem; border-radius: var(--radius-btn); border: none; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: var(--transition); }
         .btn-action:hover { background: #9c804c; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(176, 146, 90, 0.2); }
-
-        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.95rem; }
-        .highlight-box {
-            background: #F9F8F5; padding: 25px; border-radius: 16px; margin-top: 20px;
-            border-left: 4px solid var(--accent-gold); border-right: 1px solid var(--border-color); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
-        }
-        .highlight-box h3 { color: var(--accent-gold); font-size: 1.1rem; font-style: italic; margin-bottom: 15px; }
-        .money-number { font-family: 'Playfair Display', serif; font-weight: 600; }
-        .profit-text { color: var(--success); font-weight: 700; font-size: 1.15rem; }
+        .btn-secondary { cursor: pointer; background: var(--accent-primary); color: #FFFFFF; width: 100%; padding: 10px; font-size: 0.9rem; border-radius: var(--radius-btn); border: none; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: var(--transition); }
+        .btn-secondary:hover { background: #0f2019; }
 
         /* TICKET COMERCIAL - DISEÑO BOUTIQUE / APPLE STORE */
-        .receipt-container {
-            display: flex; justify-content: center; align-items: center; background: var(--bg-base);
-        }
+        .receipt-container { display: flex; justify-content: center; align-items: flex-start; }
         .receipt {
-            background: #FFFFFF; 
-            color: #000000;
-            padding: 40px 30px;
-            width: 100%;
-            max-width: 380px;
-            position: relative;
-            display: none;
-            /* Estilo papel térmico, bordes rectos y sombra profunda */
-            border-radius: 0px; 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px #EAEAEA;
-            font-family: 'DM Mono', monospace; /* Tipografía realista de recibo */
+            background: #FFFFFF; color: #000000; padding: 35px 25px; width: 100%; max-width: 380px; position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px #EAEAEA; font-family: 'DM Mono', monospace; display: none;
         }
-        .receipt-logo {
-            text-align: center; margin-bottom: 15px;
-        }
-        .receipt-logo h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            letter-spacing: 3px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #000;
-        }
-        .receipt-header-info {
-            text-align: center;
-            font-size: 0.75rem;
-            color: #444;
-            margin-bottom: 25px;
-            line-height: 1.5;
-            text-transform: uppercase;
-        }
-        .receipt-divider {
-            border-top: 1px dashed #000;
-            margin: 15px 0;
-        }
-        .receipt-divider-solid {
-            border-top: 2px solid #000;
-            margin: 15px 0;
-        }
-        .receipt-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            color: #000;
-        }
+        .receipt-logo { text-align: center; margin-bottom: 15px; }
+        .receipt-logo h2 { font-family: 'Playfair Display', serif; font-size: 2rem; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; color: #000; margin:0;}
+        .receipt-header-info { text-align: center; font-size: 0.70rem; color: #444; margin-bottom: 20px; line-height: 1.4; text-transform: uppercase; }
+        .receipt-divider { border-top: 1px dashed #000; margin: 12px 0; }
+        .receipt-divider-solid { border-top: 2px solid #000; margin: 12px 0; }
+        .receipt-row { display: flex; justify-content: space-between; font-size: 0.80rem; margin-bottom: 6px; color: #000; }
         .receipt-row.bold { font-weight: 600; }
-        .receipt-total-box {
-            font-size: 1.6rem;
-            font-weight: 500;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 20px 0 5px 0;
+        .receipt-total-box { font-size: 1.4rem; font-weight: 500; display: flex; justify-content: space-between; align-items: center; margin: 15px 0 5px 0; }
+        .badge-status { color: #000; padding: 6px 12px; border: 1px solid #000; font-size: 0.75rem; font-weight: 600; display: inline-block; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .barcode { font-family: 'Libre Barcode 128', cursive; font-size: 3.5rem; text-align: center; margin-top: 20px; color: #000; line-height: 0.8; }
+
+        /* Tablas Old Money Vibes */
+        .table-container { border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
+        th { background-color: #F9F8F5; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+        td { color: var(--text-main); font-size: 0.9rem; border-bottom: 1px solid var(--border-color); }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: rgba(176, 146, 90, 0.05); }
+        
+        .highlight-box {
+            background: #F9F8F5; padding: 20px; border-radius: 16px; 
+            border-left: 4px solid var(--accent-gold); border-right: 1px solid var(--border-color); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
         }
-        .badge-status {
-            color: #000;
-            padding: 8px 15px;
-            border: 1px solid #000;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: transparent;
-        }
-        .barcode {
-            font-family: 'Libre Barcode 128', cursive;
-            font-size: 4rem;
-            text-align: center;
-            margin-top: 25px;
-            color: #000;
-            line-height: 0.8;
-        }
+        .highlight-box h3 { color: var(--accent-gold); font-size: 1rem; font-style: italic; margin-bottom: 12px; }
+        .data-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; }
+        .money-number { font-family: 'Playfair Display', serif; font-weight: 600; }
+        .profit-text { color: var(--success); font-weight: 700; }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;}
+        .tab { cursor: pointer; padding: 8px 16px; font-weight: 600; color: var(--text-muted); border-radius: var(--radius-btn); transition: var(--transition); }
+        .tab:hover { background: #F9F8F5; }
+        .tab.active { background: var(--accent-primary); color: white; }
+
+        /* Badge category */
+        .badge-cat { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block;}
+        .cat-tenis { background: rgba(23, 48, 38, 0.1); color: var(--accent-primary); }
+        .cat-bolsas { background: rgba(176, 146, 90, 0.1); color: var(--accent-gold); }
+        
+        /* Layout Grid */
+        .main-layout { display: grid; grid-template-columns: 1fr 400px; gap: 25px; align-items: start; }
+        @media (max-width: 1024px) { .main-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
     <header class="top-bar">
         <div class="logo">GABACHIN STORE</div>
-        <div class="sync-status">
-            <div class="dot"></div>
-            Punto de Venta Activo
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-semibold" style="color: var(--text-muted)">T.C. (MXN)</span>
+                <input type="number" id="globalExchangeRate" value="18.50" step="0.10" class="custom-input" style="width: 80px; padding: 6px; text-align:center; font-weight: bold;">
+            </div>
+            <div class="sync-status">
+                <div class="dot"></div>
+                Sistema Unificado
+            </div>
         </div>
     </header>
 
-    <main class="dashboard-grid">
-        <!-- TU PANEL DE CONTROL -->
-        <section class="panel">
-            <h2 class="panel-title">Terminal de Venta</h2>
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('inventario')">📦 Inventario Activo</div>
+        <div class="tab" onclick="switchTab('calculadora')">🧮 Terminal / POS</div>
+    </div>
+
+    <!-- VISTA 1: INVENTARIO -->
+    <div id="viewInventario" class="glass-panel">
+        <div class="flex justify-between items-center mb-6">
+            <h2 style="font-size: 1.5rem; color: var(--accent-primary);">Catálogo y Existencias</h2>
+            <div class="flex gap-4">
+                <div class="text-right">
+                    <p class="text-xs font-bold uppercase tracking-wider" style="color: var(--text-muted)">Valor Inv. (USD)</p>
+                    <p class="text-xl font-bold" style="font-family: 'Playfair Display', serif; color: var(--accent-gold)" id="headerInvTotalUsd">$0.00</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container bg-white">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-3 text-left">Categoría</th>
+                        <th class="px-4 py-3 text-left">Marca / Producto</th>
+                        <th class="px-4 py-3 text-center">Cant.</th>
+                        <th class="px-4 py-3 text-right">Costo USD</th>
+                        <th class="px-4 py-3 text-right" style="color: var(--accent-primary)">Precio Sug. MXN</th>
+                        <th class="px-4 py-3 text-center">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="inventarioTableBody" class="bg-white">
+                    <!-- Filas dinámicas -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-6 border-t border-gray-200 pt-6">
+            <h3 class="mb-4" style="color: var(--accent-primary)">+ Añadir Nuevo Producto</h3>
+            <form id="addInventoryForm" class="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Cat</label>
+                    <select id="newCat" class="custom-input" style="padding: 10px;">
+                        <option value="Tenis">Tenis</option>
+                        <option value="Bolsas">Bolsas</option>
+                        <option value="Gorras">Gorras</option>
+                        <option value="Cinturones">Cinturones</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="text-xs font-bold text-gray-500 uppercase">Descripción</label>
+                    <input type="text" id="newDesc" required class="custom-input" style="padding: 10px;" placeholder="Ej. Adidas Samba">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Costo USD</label>
+                    <input type="number" id="newCosto" step="0.01" required class="custom-input" style="padding: 10px;" placeholder="0.00">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Precio MXN</label>
+                    <input type="number" id="newPrecio" step="0.01" class="custom-input" style="padding: 10px;" placeholder="Opcional">
+                </div>
+                <div>
+                    <button type="submit" class="btn-secondary">Añadir al Stock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- VISTA 2: TERMINAL POS -->
+    <div id="viewTerminal" class="main-layout" style="display: none;">
+        
+        <!-- Panel Izquierdo: Formulario -->
+        <section class="glass-panel">
+            <h2 style="font-size: 1.5rem; color: var(--accent-primary); margin-bottom: 25px;">Punto de Venta</h2>
             
-            <div class="input-group">
-                <label>Descripción del Artículo</label>
-                <input type="text" id="productName" placeholder="Ej. Air Jordan 1 Low - Talla 9">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="input-group">
+                    <label>Buscar Producto (Inventario)</label>
+                    <select id="posSelector" class="custom-input" onchange="loadProductToPOS()">
+                        <option value="">-- Seleccionar --</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>O Escribe Descripción Manual</label>
+                    <input type="text" id="productName" class="custom-input" placeholder="Ej. Air Jordan 1 Low">
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>Precio Origen (USD)</label>
-                <input type="number" id="productPrice" placeholder="0.00">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="input-group">
+                    <label>Precio Origen (USD)</label>
+                    <input type="number" id="productPrice" step="0.01" class="custom-input" placeholder="0.00" oninput="calculate()">
+                </div>
+                <div class="input-group">
+                    <label>Precio Venta (MXN) - Opcional</label>
+                    <input type="number" id="productPriceMXN" step="0.01" class="custom-input" placeholder="0.00" oninput="overrideFromMXN()">
+                    <span class="text-xs text-gray-400 mt-1 block">*Si llenas esto, ignora el margen</span>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>Margen Comercial</label>
-                <div class="btn-grid">
+            <div class="input-group mb-5">
+                <label>Margen Comercial (Autocalcular Venta MXN)</label>
+                <div class="grid grid-cols-4 gap-2">
                     <button class="btn-option btn-margin" onclick="setMargin(0.10)">+10%</button>
-                    <button class="btn-option btn-margin" onclick="setMargin(0.15)">+15%</button>
                     <button class="btn-option btn-margin" onclick="setMargin(0.20)">+20%</button>
-                    <button class="btn-option btn-margin" onclick="setMargin(0.25)">+25%</button>
-                    <button class="btn-option btn-margin" onclick="setMargin(0.30)">+30%</button>
-                    <button class="btn-option btn-margin" onclick="setMargin(0.40)">+40%</button>
-                    <button class="btn-option btn-margin" onclick="setMargin(0.45)">+45%</button>
+                    <button class="btn-option btn-margin active" onclick="setMargin(0.30)">+30%</button>
                     <button class="btn-option btn-margin" onclick="setMargin(1.00)">Doble</button>
                 </div>
             </div>
 
-            <div class="input-group">
+            <div class="input-group mb-5">
                 <label>Términos de Pago</label>
-                <div class="payment-grid">
-                    <button class="btn-option btn-payment" id="pay50" onclick="setPaymentMode('50/50')">Anticipo 50%</button>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="btn-option btn-payment active" id="pay50" onclick="setPaymentMode('50/50')">Anticipo 50%</button>
                     <button class="btn-option btn-payment" id="pay100" onclick="setPaymentMode('100')">Liquidación 100%</button>
                 </div>
             </div>
 
-            <button class="btn-action" onclick="calculate()">Emitir Recibo de Venta</button>
+            <button class="btn-action" onclick="generateTicket()">VENDER Y EMITIR TICKET</button>
 
-            <!-- Tu Resumen Interno -->
-            <div class="highlight-box">
-                <h3>Libro Mayor (Privado)</h3>
-                <div class="data-row"><span>Costo Base + Tax (7%):</span> <span class="money-number" id="intBaseCost">$0.00 USD</span></div>
-                <div class="data-row"><span>Costos de Importación/Viaje:</span> <span class="money-number">$5.00 USD</span></div>
-                <div class="data-row" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-                    <span>Costo Real de Adquisición:</span> <span class="money-number" id="intRealInvestment" style="color: var(--accent-primary);">$0.00 USD</span>
+            <!-- Resumen Interno POS -->
+            <div class="highlight-box mt-6">
+                <h3>Libro Mayor (Proyección de esta venta)</h3>
+                <div class="data-row"><span>Costo Base:</span> <span class="money-number" id="intBaseCost">$0.00 USD</span></div>
+                <div class="data-row" style="border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                    <span>Costo Convertido (T.C. actual):</span> <span class="money-number" id="intRealInvestment" style="color: var(--accent-primary);">$0.00 MXN</span>
                 </div>
-                <div class="data-row" style="margin-top: 15px;">
-                    <span>Fondo Recibido (Caja):</span> <span class="money-number" id="intAdvance" style="color: var(--warning);">$0.00 USD</span>
+                <div class="data-row" style="margin-top: 10px;">
+                    <span>Precio Venta Final:</span> <span class="money-number" id="intSellPrice" style="color: var(--accent-primary);">$0.00 MXN</span>
                 </div>
                 <div class="data-row">
-                    <span>Déficit Temporal (De tu bolsillo):</span> <span class="money-number" id="intPocketCost">$0.00 USD</span>
+                    <span>Anticipo a Recibir:</span> <span class="money-number" id="intAdvance" style="color: var(--warning);">$0.00 MXN</span>
                 </div>
-                <div class="data-row" style="margin-top: 15px;">
-                    <span style="font-weight: 600;">Utilidad Neta (Ganancia):</span> <span class="money-number profit-text" id="intProfit">$0.00 MXN</span>
+                <div class="data-row" style="margin-top: 10px; font-size: 1.05rem;">
+                    <span style="font-weight: 600;">Utilidad Limpia:</span> <span class="money-number profit-text" id="intProfit">$0.00 MXN</span>
+                </div>
+                <div class="data-row" style="font-size: 0.8rem; color: var(--text-muted);">
+                    <span>Margen Efectivo:</span> <span id="intMarginPct" style="font-weight: bold;">0%</span>
                 </div>
             </div>
         </section>
 
-        <!-- TICKET DEL CLIENTE (Estilo Comercial / Boutique) -->
+        <!-- Panel Derecho: Ticket -->
         <section class="receipt-container">
             <div id="ticketView" class="receipt">
                 <div class="receipt-logo">
@@ -256,18 +293,18 @@
                 
                 <div class="receipt-divider-solid"></div>
                 
-                <div class="receipt-row bold" style="color: #666; font-size: 0.75rem;">
-                    <span>CANT. / DESCRIPCIÓN</span>
-                    <span>IMPORTE</span>
+                <div class="receipt-row bold" style="color: #666; font-size: 0.70rem;">
+                    <span>DESCRIPCIÓN</span>
+                    <span>IMPORTE (MXN)</span>
                 </div>
                 
-                <div class="receipt-row" style="margin-top: 10px;">
+                <div class="receipt-row" style="margin-top: 10px; font-size:0.9rem;">
                     <span id="tkProduct" style="text-transform: uppercase;">-</span>
-                    <span id="tkTotalUSD">$0.00</span>
+                    <span id="tkTotalRowMXN">$0.00</span>
                 </div>
                 
-                <div class="receipt-row" style="font-size: 0.75rem; color: #666; margin-bottom: 20px;">
-                    <span>1 UNIDAD x T.C. $21.00 MXN</span>
+                <div class="receipt-row" style="font-size: 0.70rem; color: #666; margin-bottom: 20px;">
+                    <span id="tkExchangeInfo">1 UNIDAD (T.C. $18.50)</span>
                 </div>
                 
                 <div class="receipt-divider"></div>
@@ -276,17 +313,17 @@
                     <span>TOTAL</span>
                     <span id="tkTotalMXN">$0.00</span>
                 </div>
-                <div style="text-align: right; font-size: 0.75rem; color: #000; margin-top: -5px; font-weight: 600;">MXN - PESOS MEXICANOS</div>
+                <div style="text-align: right; font-size: 0.70rem; color: #000; margin-top: -5px; font-weight: 600;">PESOS MEXICANOS</div>
 
                 <div class="receipt-divider"></div>
 
                 <div id="paymentBreakdownContainer">
                     <div class="receipt-row bold">
-                        <span>ANTICIPO RECIBIDO:</span> 
+                        <span>A CUENTA (ANTICIPO):</span> 
                         <span id="tkAdvance">$0.00</span>
                     </div>
                     <div class="receipt-row bold" id="tkBalanceRow">
-                        <span>SALDO PENDIENTE:</span> 
+                        <span>RESTA (SALDO):</span> 
                         <span id="tkBalance">$0.00</span>
                     </div>
                 </div>
@@ -295,37 +332,160 @@
                     <div id="tkBadge" class="badge-status">ESTADO: POR PAGAR</div>
                 </div>
 
-                <div class="barcode" id="tkBarcode">
-                    GabachinStore
-                </div>
+                <div class="barcode" id="tkBarcode">GABACHIN</div>
                 
-                <div style="text-align: center; font-size: 0.75rem; margin-top: 5px; font-weight: 600;">
+                <div style="text-align: center; font-size: 0.70rem; margin-top: 10px; font-weight: 600;">
                     GRACIAS POR SU COMPRA
                 </div>
             </div>
             
-            <div id="placeholderText" style="text-align: center;">
-                <p style="color: var(--text-muted); font-size: 1.1rem; font-family: 'Playfair Display', serif; font-style: italic;">
-                    El recibo comercial se generará<br>al procesar la venta.
+            <div id="placeholderText" style="text-align: center; width: 100%; padding-top: 100px;">
+                <p style="color: var(--text-muted); font-size: 1.2rem; font-family: 'Playfair Display', serif; font-style: italic;">
+                    El ticket boutique aparecerá aquí<br>al generar la venta.
                 </p>
             </div>
         </section>
-    </main>
+
+    </div>
 
     <script>
-        const EXCHANGE_RATE = 21.00;
-        const TAX_RATE = 0.07;
-        const LOGISTICS_COST_USD = 5.00;
-        
-        let selectedMargin = 0;
+        // --- BASE DE DATOS INICIAL (HISTORIAL) ---
+        // Simulación de los datos que extrajimos de tu Excel
+        let inventory = [
+            { id: 1, cat: 'Tenis', desc: 'Adidas Gazelle', costoUsd: 47.00, precioMxn: 1200 },
+            { id: 2, cat: 'Tenis', desc: 'Nike Pegasus Trail 5', costoUsd: 70.00, precioMxn: 1800 },
+            { id: 3, cat: 'Tenis', desc: 'Crocs Siren Clog', costoUsd: 25.00, precioMxn: 700 },
+            { id: 4, cat: 'Bolsas', desc: 'Guess Café Candado', costoUsd: 43.00, precioMxn: null },
+            { id: 5, cat: 'Gorras', desc: 'New Balance Negra', costoUsd: 10.00, precioMxn: 500 }
+        ];
+
+        // --- SISTEMA DE PESTAÑAS ---
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'inventario') {
+                document.getElementById('viewInventario').style.display = 'block';
+                document.getElementById('viewTerminal').style.display = 'none';
+                renderInventory();
+            } else {
+                document.getElementById('viewInventario').style.display = 'none';
+                document.getElementById('viewTerminal').style.display = 'grid';
+                updatePOSSelector();
+            }
+        }
+
+        // --- LÓGICA DE INVENTARIO ---
+        const formatoMxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+        const formatoUsd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+        function getCatClass(cat) {
+            if(cat.toLowerCase() === 'tenis') return 'cat-tenis';
+            if(cat.toLowerCase() === 'bolsas') return 'cat-bolsas';
+            return 'bg-gray-100 text-gray-600';
+        }
+
+        function renderInventory() {
+            const tbody = document.getElementById('inventarioTableBody');
+            tbody.innerHTML = '';
+            let totalUsd = 0;
+
+            inventory.forEach((item, index) => {
+                totalUsd += item.costoUsd;
+                const tr = document.createElement('tr');
+                const precioTxt = item.precioMxn ? formatoMxn.format(item.precioMxn) : '<span class="text-gray-400 italic">No def.</span>';
+                
+                tr.innerHTML = `
+                    <td class="px-4 py-3"><span class="badge-cat ${getCatClass(item.cat)}">${item.cat}</span></td>
+                    <td class="px-4 py-3 font-medium">${item.desc}</td>
+                    <td class="px-4 py-3 text-center">1</td>
+                    <td class="px-4 py-3 text-right font-mono">${formatoUsd.format(item.costoUsd)}</td>
+                    <td class="px-4 py-3 text-right font-mono font-bold">${precioTxt}</td>
+                    <td class="px-4 py-3 text-center">
+                        <button onclick="sendToPOS(${item.id})" class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded font-bold hover:bg-indigo-100">VENDER</button>
+                        <button onclick="deleteItem(${item.id})" class="text-xs text-red-500 ml-2 font-bold hover:text-red-700">X</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('headerInvTotalUsd').innerText = formatoUsd.format(totalUsd);
+        }
+
+        document.getElementById('addInventoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const cat = document.getElementById('newCat').value;
+            const desc = document.getElementById('newDesc').value;
+            const costo = parseFloat(document.getElementById('newCosto').value);
+            let precio = parseFloat(document.getElementById('newPrecio').value);
+            if(isNaN(precio)) precio = null;
+
+            inventory.push({
+                id: Date.now(), cat: cat, desc: desc, costoUsd: costo, precioMxn: precio
+            });
+            
+            this.reset();
+            renderInventory();
+            updatePOSSelector();
+        });
+
+        function deleteItem(id) {
+            inventory = inventory.filter(i => i.id !== id);
+            renderInventory();
+            updatePOSSelector();
+        }
+
+        function sendToPOS(id) {
+            switchTab('calculadora');
+            // Select the tab visually
+            document.querySelectorAll('.tab')[1].classList.add('active');
+            document.querySelectorAll('.tab')[0].classList.remove('active');
+            
+            const sel = document.getElementById('posSelector');
+            sel.value = id;
+            loadProductToPOS();
+        }
+
+        function updatePOSSelector() {
+            const sel = document.getElementById('posSelector');
+            sel.innerHTML = '<option value="">-- Manual / Sin seleccionar --</option>';
+            inventory.forEach(item => {
+                sel.innerHTML += `<option value="${item.id}">${item.desc} ($${item.costoUsd} USD)</option>`;
+            });
+        }
+
+
+        // --- LÓGICA TERMINAL POS / CALCULADORA ---
+        let selectedMargin = 0.30;
         let paymentMode = '50/50';
 
-        document.getElementById('pay50').classList.add('active');
+        function loadProductToPOS() {
+            const id = document.getElementById('posSelector').value;
+            if(!id) {
+                document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productPriceMXN').value = '';
+                calculate();
+                return;
+            }
+            
+            const item = inventory.find(i => i.id == id);
+            document.getElementById('productName').value = item.desc;
+            document.getElementById('productPrice').value = item.costoUsd;
+            if(item.precioMxn) {
+                document.getElementById('productPriceMXN').value = item.precioMxn;
+            } else {
+                document.getElementById('productPriceMXN').value = '';
+            }
+            calculate();
+        }
 
         function setMargin(margin) {
             selectedMargin = margin;
             document.querySelectorAll('.btn-margin').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
+            // Si elige margen, borramos el "override" de precio manual MXN para que recalcule
+            document.getElementById('productPriceMXN').value = '';
+            calculate();
         }
 
         function setPaymentMode(mode) {
@@ -336,120 +496,117 @@
             } else {
                 document.getElementById('pay100').classList.add('active');
             }
+            calculate(); // Refrescar vista interna
         }
 
-        // Generar número de orden aleatorio
-        function generateOrderNumber() {
-            return Math.floor(1000 + Math.random() * 9000);
+        function overrideFromMXN() {
+            // Desactiva los botones de margen visualmente porque manda el precio fijo
+            document.querySelectorAll('.btn-margin').forEach(btn => btn.classList.remove('active'));
+            calculate();
         }
 
-        // Obtener fecha actual formateada
-        function getCurrentDate() {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            let mm = today.getMonth() + 1; 
-            let dd = today.getDate();
-            let hh = today.getHours();
-            let min = today.getMinutes();
-            let ampm = hh >= 12 ? 'PM' : 'AM';
-            
-            hh = hh % 12;
-            hh = hh ? hh : 12; 
-            
-            if (dd < 10) dd = '0' + dd;
-            if (mm < 10) mm = '0' + mm;
-            if (min < 10) min = '0' + min;
-
-            return `${dd}/${mm}/${yyyy} ${hh}:${min} ${ampm}`;
-        }
+        // Variable global para almacenar el cálculo actual y usarlo en el ticket
+        let currentCalc = null;
 
         function calculate() {
-            const name = document.getElementById('productName').value || "ARTICULO IMPORTADO";
-            const priceUSD = parseFloat(document.getElementById('productPrice').value);
+            const tc = parseFloat(document.getElementById('globalExchangeRate').value) || 18.50;
+            const priceUSD = parseFloat(document.getElementById('productPrice').value) || 0;
+            const manualPriceMXN = parseFloat(document.getElementById('productPriceMXN').value);
 
-            if (isNaN(priceUSD) || priceUSD <= 0) {
-                alert("Por favor, ingrese el precio base del artículo.");
+            if(priceUSD === 0) { resetInternalBook(); return; }
+
+            const costoMXN = priceUSD * tc;
+            let sellPriceMXN = 0;
+
+            if(!isNaN(manualPriceMXN) && manualPriceMXN > 0) {
+                sellPriceMXN = manualPriceMXN;
+            } else {
+                // Calcular por margen
+                // Costo MXN + (% margen sobre costo)
+                const util = costoMXN * selectedMargin;
+                sellPriceMXN = costoMXN + util;
+            }
+
+            const profitMXN = sellPriceMXN - costoMXN;
+            const marginReal = (profitMXN / sellPriceMXN) * 100;
+
+            let advanceMXN = paymentMode === '50/50' ? sellPriceMXN / 2 : sellPriceMXN;
+
+            // Actualizar vista libro mayor
+            document.getElementById('intBaseCost').innerText = formatoUsd.format(priceUSD);
+            document.getElementById('intRealInvestment').innerText = formatoMxn.format(costoMXN);
+            document.getElementById('intSellPrice').innerText = formatoMxn.format(sellPriceMXN);
+            document.getElementById('intAdvance').innerText = formatoMxn.format(advanceMXN);
+            
+            const profitEl = document.getElementById('intProfit');
+            profitEl.innerText = formatoMxn.format(profitMXN);
+            profitEl.style.color = profitMXN >= 0 ? 'var(--success)' : 'var(--danger)';
+
+            document.getElementById('intMarginPct').innerText = `${marginReal.toFixed(1)}%`;
+
+            // Guardar en objeto
+            currentCalc = {
+                tc: tc, desc: document.getElementById('productName').value || "Artículo de Boutique",
+                sellMXN: sellPriceMXN, advMXN: advanceMXN, balMXN: sellPriceMXN - advanceMXN
+            };
+        }
+
+        function resetInternalBook() {
+            document.getElementById('intBaseCost').innerText = "$0.00 USD";
+            document.getElementById('intRealInvestment').innerText = "$0.00 MXN";
+            document.getElementById('intSellPrice').innerText = "$0.00 MXN";
+            document.getElementById('intAdvance').innerText = "$0.00 MXN";
+            document.getElementById('intProfit').innerText = "$0.00 MXN";
+            document.getElementById('intMarginPct').innerText = "0%";
+            currentCalc = null;
+        }
+
+        // TICKET LOGIC
+        function generateOrderNumber() { return Math.floor(1000 + Math.random() * 9000); }
+        function getCurrentDate() {
+            const t = new Date();
+            return `${t.getDate().toString().padStart(2,'0')}/${(t.getMonth()+1).toString().padStart(2,'0')}/${t.getFullYear()} ${t.getHours()}:${t.getMinutes().toString().padStart(2,'0')}`;
+        }
+
+        function generateTicket() {
+            if(!currentCalc || currentCalc.sellMXN <= 0) {
+                alert("Por favor ingresa un costo origen o selecciona un producto para vender.");
                 return;
             }
-            if (selectedMargin === 0) {
-                alert("Por favor, seleccione un margen comercial.");
-                return;
-            }
 
-            const taxAmount = priceUSD * TAX_RATE;
-            const baseCost = priceUSD + taxAmount;
-            const realInvestmentUSD = baseCost + LOGISTICS_COST_USD;
-            
-            const profitUSD = realInvestmentUSD * selectedMargin;
-            const finalPriceUSD = realInvestmentUSD + profitUSD;
-            const finalPriceMXN = finalPriceUSD * EXCHANGE_RATE;
-            const profitMXN = profitUSD * EXCHANGE_RATE;
-
-            let advanceMXN = 0;
-            let balanceMXN = 0;
-            let advanceUSD = 0;
-            let pocketCostUSD = 0;
-
-            if (paymentMode === '50/50') {
-                advanceMXN = finalPriceMXN / 2;
-                balanceMXN = finalPriceMXN / 2;
-                advanceUSD = finalPriceUSD / 2;
-                
-                if (advanceUSD < realInvestmentUSD) {
-                    pocketCostUSD = realInvestmentUSD - advanceUSD;
-                }
-            } else {
-                advanceMXN = finalPriceMXN;
-                balanceMXN = 0;
-                advanceUSD = finalPriceUSD;
-                pocketCostUSD = 0;
-            }
-
-            // Actualizar Panel Interno
-            document.getElementById('intBaseCost').innerText = `$${baseCost.toFixed(2)} USD`;
-            document.getElementById('intRealInvestment').innerText = `$${realInvestmentUSD.toFixed(2)} USD`;
-            document.getElementById('intAdvance').innerText = `$${advanceUSD.toFixed(2)} USD`;
-            
-            const pocketText = document.getElementById('intPocketCost');
-            if (pocketCostUSD > 0) {
-                pocketText.innerText = `$${pocketCostUSD.toFixed(2)} USD`;
-                pocketText.style.color = 'var(--danger)';
-            } else {
-                pocketText.innerText = "$0.00 USD (Cubierto)";
-                pocketText.style.color = 'var(--success)';
-            }
-            
-            document.getElementById('intProfit').innerText = `$${profitUSD.toFixed(2)} USD / $${profitMXN.toFixed(2)} MXN`;
-
-            // Configurar datos comerciales del recibo
-            const orderNum = generateOrderNumber();
-            document.getElementById('tkOrderNumber').innerText = `#ORD-${orderNum}`;
+            const ord = generateOrderNumber();
+            document.getElementById('tkOrderNumber').innerText = `#ORD-${ord}`;
             document.getElementById('tkDate').innerText = getCurrentDate();
             
-            // Truco para el código de barras (solo letras mayúsculas y números sin espacios funciona mejor en esta fuente)
-            document.getElementById('tkBarcode').innerText = `GAB${orderNum}`;
+            document.getElementById('tkProduct').innerText = currentCalc.desc.substring(0, 24);
+            document.getElementById('tkTotalRowMXN').innerText = formatoMxn.format(currentCalc.sellMXN);
+            document.getElementById('tkExchangeInfo').innerText = `1 UNIDAD (T.C. VIGENTE $${currentCalc.tc.toFixed(2)})`;
+            
+            document.getElementById('tkTotalMXN').innerText = formatoMxn.format(currentCalc.sellMXN);
+            document.getElementById('tkAdvance').innerText = formatoMxn.format(currentCalc.advMXN);
+            document.getElementById('tkBalance').innerText = formatoMxn.format(currentCalc.balMXN);
 
-            // Actualizar Ticket del Cliente
-            document.getElementById('tkProduct').innerText = name.substring(0, 22); // Cortar si es muy largo para que no rompa el diseño
-            document.getElementById('tkTotalUSD').innerText = `$${finalPriceUSD.toFixed(2)}`;
-            document.getElementById('tkTotalMXN').innerText = `$${finalPriceMXN.toFixed(2)}`;
-            document.getElementById('tkAdvance').innerText = `$${advanceMXN.toFixed(2)}`;
-            document.getElementById('tkBalance').innerText = `$${balanceMXN.toFixed(2)}`;
-
-            const balanceRow = document.getElementById('tkBalanceRow');
             const badge = document.getElementById('tkBadge');
+            const balRow = document.getElementById('tkBalanceRow');
 
-            if (paymentMode === '50/50') {
-                balanceRow.style.display = 'flex';
-                badge.innerText = "ESTADO: PENDIENTE (50%)";
+            if(paymentMode === '50/50') {
+                badge.innerText = "ESTADO: ANTICIPO (50%)";
+                balRow.style.display = 'flex';
             } else {
-                balanceRow.style.display = 'none';
-                badge.innerText = "ESTADO: PAGADO (100%)";
+                badge.innerText = "ESTADO: LIQUIDADO";
+                balRow.style.display = 'none';
             }
+
+            document.getElementById('tkBarcode').innerText = `GAB${ord}`;
 
             document.getElementById('placeholderText').style.display = 'none';
             document.getElementById('ticketView').style.display = 'block';
         }
+
+        // Init
+        document.getElementById('globalExchangeRate').addEventListener('input', () => { renderInventory(); calculate(); });
+        renderInventory();
+
     </script>
 </body>
 </html>
