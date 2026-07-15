@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Libre+Barcode+128&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Variables - OLD MONEY VIBES (Panel de Control) */
+        /* Variables - OLD MONEY VIBES */
         :root {
             --bg-base: #F4F1EA; 
             --bg-panel: #FFFFFF; 
@@ -20,6 +20,7 @@
             --text-muted: #7A858A;
             --success: #2A5A40; 
             --warning: #947219; 
+            --info: #2B4C7E;
             --danger: #802324; 
             --border-color: #E8E3D8;
             --radius-card: 20px;
@@ -39,7 +40,7 @@
 
         h1, h2, h3, .logo { font-family: 'Playfair Display', serif; }
 
-        /* Componentes base tomados del estilo original */
+        /* Componentes base */
         .glass-panel {
             background: var(--bg-panel); border-radius: var(--radius-card); padding: 30px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
@@ -57,7 +58,7 @@
         .dot { width: 8px; height: 8px; background-color: var(--accent-gold); border-radius: 50%; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
 
-        /* Estilos de inputs y botones de la calculadora POS original */
+        /* Inputs y Botones */
         .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
         .custom-input {
             width: 100%; padding: 12px 16px; background: #F9F8F5; border: 1px solid var(--border-color);
@@ -74,7 +75,7 @@
         .btn-secondary { cursor: pointer; background: var(--accent-primary); color: #FFFFFF; width: 100%; padding: 10px; font-size: 0.9rem; border-radius: var(--radius-btn); border: none; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: var(--transition); }
         .btn-secondary:hover { background: #0f2019; }
 
-        /* TICKET COMERCIAL - DISEÑO BOUTIQUE / APPLE STORE */
+        /* TICKET COMERCIAL */
         .receipt-container { display: flex; justify-content: center; align-items: flex-start; }
         .receipt {
             background: #FFFFFF; color: #000000; padding: 35px 25px; width: 100%; max-width: 380px; position: relative;
@@ -91,7 +92,7 @@
         .badge-status { color: #000; padding: 6px 12px; border: 1px solid #000; font-size: 0.75rem; font-weight: 600; display: inline-block; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
         .barcode { font-family: 'Libre Barcode 128', cursive; font-size: 3.5rem; text-align: center; margin-top: 20px; color: #000; line-height: 0.8; }
 
-        /* Tablas Old Money Vibes */
+        /* Tablas */
         .table-container { border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
         th { background-color: #F9F8F5; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
         td { color: var(--text-main); font-size: 0.9rem; border-bottom: 1px solid var(--border-color); }
@@ -107,15 +108,21 @@
         .money-number { font-family: 'Playfair Display', serif; font-weight: 600; }
         .profit-text { color: var(--success); font-weight: 700; }
 
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;}
-        .tab { cursor: pointer; padding: 8px 16px; font-weight: 600; color: var(--text-muted); border-radius: var(--radius-btn); transition: var(--transition); }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; overflow-x: auto;}
+        .tab { cursor: pointer; padding: 8px 16px; font-weight: 600; color: var(--text-muted); border-radius: var(--radius-btn); transition: var(--transition); white-space: nowrap; }
         .tab:hover { background: #F9F8F5; }
         .tab.active { background: var(--accent-primary); color: white; }
 
-        /* Badge category */
+        /* Badges */
         .badge-cat { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block;}
         .cat-tenis { background: rgba(23, 48, 38, 0.1); color: var(--accent-primary); }
         .cat-bolsas { background: rgba(176, 146, 90, 0.1); color: var(--accent-gold); }
+
+        .badge-encargo { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; cursor: pointer; border: 1px solid transparent; transition: var(--transition); display: inline-block; }
+        .badge-encargo:hover { transform: scale(1.05); }
+        .estado-pendiente { background: rgba(148, 114, 25, 0.1); color: var(--warning); border-color: rgba(148, 114, 25, 0.3); }
+        .estado-comprado { background: rgba(43, 76, 126, 0.1); color: var(--info); border-color: rgba(43, 76, 126, 0.3); }
+        .estado-entregado { background: rgba(42, 90, 64, 0.1); color: var(--success); border-color: rgba(42, 90, 64, 0.3); }
         
         /* Layout Grid */
         .main-layout { display: grid; grid-template-columns: 1fr 400px; gap: 25px; align-items: start; }
@@ -141,6 +148,7 @@
     <div class="tabs">
         <div class="tab active" onclick="switchTab('inventario')">📦 Inventario Activo</div>
         <div class="tab" onclick="switchTab('calculadora')">🧮 Terminal / POS</div>
+        <div class="tab" onclick="switchTab('encargos')">📝 Libreta de Encargos</div>
     </div>
 
     <!-- VISTA 1: INVENTARIO -->
@@ -155,16 +163,16 @@
             </div>
         </div>
 
-        <div class="table-container bg-white">
+        <div class="table-container bg-white overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr>
-                        <th class="px-4 py-3 text-left">Categoría</th>
-                        <th class="px-4 py-3 text-left">Marca / Producto</th>
-                        <th class="px-4 py-3 text-center">Cant.</th>
-                        <th class="px-4 py-3 text-right">Costo USD</th>
-                        <th class="px-4 py-3 text-right" style="color: var(--accent-primary)">Precio Sug. MXN</th>
-                        <th class="px-4 py-3 text-center">Acción</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Categoría</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Marca / Producto</th>
+                        <th class="px-4 py-3 text-center whitespace-nowrap">Cant.</th>
+                        <th class="px-4 py-3 text-right whitespace-nowrap">Costo USD</th>
+                        <th class="px-4 py-3 text-right whitespace-nowrap" style="color: var(--accent-primary)">Precio Sug. MXN</th>
+                        <th class="px-4 py-3 text-center whitespace-nowrap">Acción</th>
                     </tr>
                 </thead>
                 <tbody id="inventarioTableBody" class="bg-white">
@@ -198,7 +206,7 @@
                     <input type="number" id="newPrecio" step="0.01" class="custom-input" style="padding: 10px;" placeholder="Opcional">
                 </div>
                 <div>
-                    <button type="submit" class="btn-secondary">Añadir al Stock</button>
+                    <button type="submit" class="btn-secondary whitespace-nowrap">Añadir al Stock</button>
                 </div>
             </form>
         </div>
@@ -206,7 +214,6 @@
 
     <!-- VISTA 2: TERMINAL POS -->
     <div id="viewTerminal" class="main-layout" style="display: none;">
-        
         <!-- Panel Izquierdo: Formulario -->
         <section class="glass-panel">
             <h2 style="font-size: 1.5rem; color: var(--accent-primary); margin-bottom: 25px;">Punto de Venta</h2>
@@ -345,12 +352,60 @@
                 </p>
             </div>
         </section>
+    </div>
 
+    <!-- VISTA 3: ENCARGOS / PEDIDOS -->
+    <div id="viewEncargos" class="glass-panel" style="display: none;">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 style="font-size: 1.5rem; color: var(--accent-primary);">Libreta de Encargos</h2>
+                <p class="text-sm text-gray-500 mt-1">Registra lo que tus clientes te piden buscar y comprar.</p>
+            </div>
+        </div>
+
+        <!-- Formulario para nuevo encargo -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 mb-8 shadow-sm">
+            <form id="addEncargoForm" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                <div class="md:col-span-3">
+                    <label class="text-xs font-bold text-gray-500 uppercase">Nombre Cliente</label>
+                    <input type="text" id="encCliente" required class="custom-input" style="padding: 10px;" placeholder="Ej. Ana García">
+                </div>
+                <div class="md:col-span-4">
+                    <label class="text-xs font-bold text-gray-500 uppercase">Artículo Solicitado</label>
+                    <input type="text" id="encProducto" required class="custom-input" style="padding: 10px;" placeholder="Ej. Converse Run Star Plataforma">
+                </div>
+                <div class="md:col-span-3">
+                    <label class="text-xs font-bold text-gray-500 uppercase">Talla / Detalles</label>
+                    <input type="text" id="encDetalles" required class="custom-input" style="padding: 10px;" placeholder="Ej. Talla 24 MX, Blanco">
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="btn-action" style="padding: 10px; margin-top: 0;">Anotar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla de Encargos -->
+        <div class="table-container bg-white overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Fecha</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Cliente</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Artículo a Buscar</th>
+                        <th class="px-4 py-3 text-left whitespace-nowrap">Especificaciones</th>
+                        <th class="px-4 py-3 text-center whitespace-nowrap">Estado (Clic para cambiar)</th>
+                        <th class="px-4 py-3 text-center whitespace-nowrap">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="encargosTableBody" class="bg-white">
+                    <!-- Filas dinámicas de encargos -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        // --- BASE DE DATOS INICIAL (HISTORIAL) ---
-        // Simulación de los datos que extrajimos de tu Excel
+        // --- BASE DE DATOS INICIAL ---
         let inventory = [
             { id: 1, cat: 'Tenis', desc: 'Adidas Gazelle', costoUsd: 47.00, precioMxn: 1200 },
             { id: 2, cat: 'Tenis', desc: 'Nike Pegasus Trail 5', costoUsd: 70.00, precioMxn: 1800 },
@@ -359,26 +414,36 @@
             { id: 5, cat: 'Gorras', desc: 'New Balance Negra', costoUsd: 10.00, precioMxn: 500 }
         ];
 
+        let encargos = [
+            { id: 101, fecha: "15/07/2026", cliente: "Luis Torres", producto: "Jordan 1 Low", detalles: "Talla 28 MX / Negro", estado: "Pendiente" },
+            { id: 102, fecha: "14/07/2026", cliente: "Sofía", producto: "Bolsa Coach", detalles: "Estilo Tote, Café claro", estado: "Comprado" }
+        ];
+
         // --- SISTEMA DE PESTAÑAS ---
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
             
+            document.getElementById('viewInventario').style.display = 'none';
+            document.getElementById('viewTerminal').style.display = 'none';
+            document.getElementById('viewEncargos').style.display = 'none';
+
             if (tab === 'inventario') {
                 document.getElementById('viewInventario').style.display = 'block';
-                document.getElementById('viewTerminal').style.display = 'none';
                 renderInventory();
-            } else {
-                document.getElementById('viewInventario').style.display = 'none';
+            } else if (tab === 'calculadora') {
                 document.getElementById('viewTerminal').style.display = 'grid';
                 updatePOSSelector();
+            } else if (tab === 'encargos') {
+                document.getElementById('viewEncargos').style.display = 'block';
+                renderEncargos();
             }
         }
 
-        // --- LÓGICA DE INVENTARIO ---
         const formatoMxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
         const formatoUsd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
+        // --- LÓGICA DE INVENTARIO ---
         function getCatClass(cat) {
             if(cat.toLowerCase() === 'tenis') return 'cat-tenis';
             if(cat.toLowerCase() === 'bolsas') return 'cat-bolsas';
@@ -390,7 +455,7 @@
             tbody.innerHTML = '';
             let totalUsd = 0;
 
-            inventory.forEach((item, index) => {
+            inventory.forEach((item) => {
                 totalUsd += item.costoUsd;
                 const tr = document.createElement('tr');
                 const precioTxt = item.precioMxn ? formatoMxn.format(item.precioMxn) : '<span class="text-gray-400 italic">No def.</span>';
@@ -401,7 +466,7 @@
                     <td class="px-4 py-3 text-center">1</td>
                     <td class="px-4 py-3 text-right font-mono">${formatoUsd.format(item.costoUsd)}</td>
                     <td class="px-4 py-3 text-right font-mono font-bold">${precioTxt}</td>
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-4 py-3 text-center whitespace-nowrap">
                         <button onclick="sendToPOS(${item.id})" class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded font-bold hover:bg-indigo-100">VENDER</button>
                         <button onclick="deleteItem(${item.id})" class="text-xs text-red-500 ml-2 font-bold hover:text-red-700">X</button>
                     </td>
@@ -419,10 +484,7 @@
             let precio = parseFloat(document.getElementById('newPrecio').value);
             if(isNaN(precio)) precio = null;
 
-            inventory.push({
-                id: Date.now(), cat: cat, desc: desc, costoUsd: costo, precioMxn: precio
-            });
-            
+            inventory.push({ id: Date.now(), cat, desc, costoUsd: costo, precioMxn: precio });
             this.reset();
             renderInventory();
             updatePOSSelector();
@@ -435,11 +497,7 @@
         }
 
         function sendToPOS(id) {
-            switchTab('calculadora');
-            // Select the tab visually
-            document.querySelectorAll('.tab')[1].classList.add('active');
-            document.querySelectorAll('.tab')[0].classList.remove('active');
-            
+            document.querySelectorAll('.tab')[1].click(); // Simula click en tab de POS
             const sel = document.getElementById('posSelector');
             sel.value = id;
             loadProductToPOS();
@@ -454,9 +512,10 @@
         }
 
 
-        // --- LÓGICA TERMINAL POS / CALCULADORA ---
+        // --- LÓGICA TERMINAL POS ---
         let selectedMargin = 0.30;
         let paymentMode = '50/50';
+        let currentCalc = null;
 
         function loadProductToPOS() {
             const id = document.getElementById('posSelector').value;
@@ -471,11 +530,7 @@
             const item = inventory.find(i => i.id == id);
             document.getElementById('productName').value = item.desc;
             document.getElementById('productPrice').value = item.costoUsd;
-            if(item.precioMxn) {
-                document.getElementById('productPriceMXN').value = item.precioMxn;
-            } else {
-                document.getElementById('productPriceMXN').value = '';
-            }
+            document.getElementById('productPriceMXN').value = item.precioMxn ? item.precioMxn : '';
             calculate();
         }
 
@@ -483,7 +538,6 @@
             selectedMargin = margin;
             document.querySelectorAll('.btn-margin').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            // Si elige margen, borramos el "override" de precio manual MXN para que recalcule
             document.getElementById('productPriceMXN').value = '';
             calculate();
         }
@@ -496,17 +550,13 @@
             } else {
                 document.getElementById('pay100').classList.add('active');
             }
-            calculate(); // Refrescar vista interna
+            calculate(); 
         }
 
         function overrideFromMXN() {
-            // Desactiva los botones de margen visualmente porque manda el precio fijo
             document.querySelectorAll('.btn-margin').forEach(btn => btn.classList.remove('active'));
             calculate();
         }
-
-        // Variable global para almacenar el cálculo actual y usarlo en el ticket
-        let currentCalc = null;
 
         function calculate() {
             const tc = parseFloat(document.getElementById('globalExchangeRate').value) || 18.50;
@@ -516,23 +566,12 @@
             if(priceUSD === 0) { resetInternalBook(); return; }
 
             const costoMXN = priceUSD * tc;
-            let sellPriceMXN = 0;
-
-            if(!isNaN(manualPriceMXN) && manualPriceMXN > 0) {
-                sellPriceMXN = manualPriceMXN;
-            } else {
-                // Calcular por margen
-                // Costo MXN + (% margen sobre costo)
-                const util = costoMXN * selectedMargin;
-                sellPriceMXN = costoMXN + util;
-            }
+            let sellPriceMXN = (!isNaN(manualPriceMXN) && manualPriceMXN > 0) ? manualPriceMXN : costoMXN + (costoMXN * selectedMargin);
 
             const profitMXN = sellPriceMXN - costoMXN;
             const marginReal = (profitMXN / sellPriceMXN) * 100;
-
             let advanceMXN = paymentMode === '50/50' ? sellPriceMXN / 2 : sellPriceMXN;
 
-            // Actualizar vista libro mayor
             document.getElementById('intBaseCost').innerText = formatoUsd.format(priceUSD);
             document.getElementById('intRealInvestment').innerText = formatoMxn.format(costoMXN);
             document.getElementById('intSellPrice').innerText = formatoMxn.format(sellPriceMXN);
@@ -541,10 +580,8 @@
             const profitEl = document.getElementById('intProfit');
             profitEl.innerText = formatoMxn.format(profitMXN);
             profitEl.style.color = profitMXN >= 0 ? 'var(--success)' : 'var(--danger)';
-
             document.getElementById('intMarginPct').innerText = `${marginReal.toFixed(1)}%`;
 
-            // Guardar en objeto
             currentCalc = {
                 tc: tc, desc: document.getElementById('productName').value || "Artículo de Boutique",
                 sellMXN: sellPriceMXN, advMXN: advanceMXN, balMXN: sellPriceMXN - advanceMXN
@@ -561,7 +598,6 @@
             currentCalc = null;
         }
 
-        // TICKET LOGIC
         function generateOrderNumber() { return Math.floor(1000 + Math.random() * 9000); }
         function getCurrentDate() {
             const t = new Date();
@@ -577,11 +613,9 @@
             const ord = generateOrderNumber();
             document.getElementById('tkOrderNumber').innerText = `#ORD-${ord}`;
             document.getElementById('tkDate').innerText = getCurrentDate();
-            
             document.getElementById('tkProduct').innerText = currentCalc.desc.substring(0, 24);
             document.getElementById('tkTotalRowMXN').innerText = formatoMxn.format(currentCalc.sellMXN);
             document.getElementById('tkExchangeInfo').innerText = `1 UNIDAD (T.C. VIGENTE $${currentCalc.tc.toFixed(2)})`;
-            
             document.getElementById('tkTotalMXN').innerText = formatoMxn.format(currentCalc.sellMXN);
             document.getElementById('tkAdvance').innerText = formatoMxn.format(currentCalc.advMXN);
             document.getElementById('tkBalance').innerText = formatoMxn.format(currentCalc.balMXN);
@@ -598,14 +632,76 @@
             }
 
             document.getElementById('tkBarcode').innerText = `GAB${ord}`;
-
             document.getElementById('placeholderText').style.display = 'none';
             document.getElementById('ticketView').style.display = 'block';
         }
 
-        // Init
+        // --- LÓGICA DE LIBRETA DE ENCARGOS ---
+        function getEstadoClass(estado) {
+            if(estado === 'Pendiente') return 'estado-pendiente';
+            if(estado === 'Comprado') return 'estado-comprado';
+            if(estado === 'Entregado') return 'estado-entregado';
+            return 'bg-gray-200 text-gray-800';
+        }
+
+        function toggleEstado(id) {
+            const encargo = encargos.find(e => e.id === id);
+            if(encargo.estado === 'Pendiente') encargo.estado = 'Comprado';
+            else if(encargo.estado === 'Comprado') encargo.estado = 'Entregado';
+            else encargo.estado = 'Pendiente';
+            renderEncargos();
+        }
+
+        function deleteEncargo(id) {
+            encargos = encargos.filter(e => e.id !== id);
+            renderEncargos();
+        }
+
+        function renderEncargos() {
+            const tbody = document.getElementById('encargosTableBody');
+            tbody.innerHTML = '';
+
+            encargos.forEach(enc => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-sm text-gray-500">${enc.fecha}</td>
+                    <td class="px-4 py-3 font-bold text-gray-800">${enc.cliente}</td>
+                    <td class="px-4 py-3 font-medium text-blue-900">${enc.producto}</td>
+                    <td class="px-4 py-3 text-sm text-gray-600">${enc.detalles}</td>
+                    <td class="px-4 py-3 text-center">
+                        <span class="badge-encargo ${getEstadoClass(enc.estado)}" onclick="toggleEstado(${enc.id})">
+                            ${enc.estado} ↻
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        <button onclick="deleteEncargo(${enc.id})" class="text-xs text-red-500 font-bold hover:text-red-700">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById('addEncargoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const cliente = document.getElementById('encCliente').value;
+            const producto = document.getElementById('encProducto').value;
+            const detalles = document.getElementById('encDetalles').value;
+            
+            const t = new Date();
+            const fechaFormat = `${t.getDate().toString().padStart(2,'0')}/${(t.getMonth()+1).toString().padStart(2,'0')}/${t.getFullYear()}`;
+
+            encargos.push({
+                id: Date.now(), fecha: fechaFormat, cliente, producto, detalles, estado: "Pendiente"
+            });
+            
+            this.reset();
+            renderEncargos();
+        });
+
+        // Init General
         document.getElementById('globalExchangeRate').addEventListener('input', () => { renderInventory(); calculate(); });
         renderInventory();
+        renderEncargos();
 
     </script>
 </body>
