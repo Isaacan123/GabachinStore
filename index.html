@@ -171,6 +171,8 @@
                         <th class="px-4 py-3 text-left whitespace-nowrap">Marca / Producto</th>
                         <th class="px-4 py-3 text-center whitespace-nowrap">Cant.</th>
                         <th class="px-4 py-3 text-right whitespace-nowrap">Costo USD</th>
+                        <th class="px-4 py-3 text-right whitespace-nowrap" style="color: var(--text-muted)">Costo MXN</th>
+                        <th class="px-4 py-3 text-right whitespace-nowrap" style="color: var(--info)">Precio Sug. USD</th>
                         <th class="px-4 py-3 text-right whitespace-nowrap" style="color: var(--accent-primary)">Precio Sug. MXN</th>
                         <th class="px-4 py-3 text-center whitespace-nowrap">Acción</th>
                     </tr>
@@ -222,7 +224,7 @@
                 <div class="input-group">
                     <label>Buscar Producto (Inventario)</label>
                     <select id="posSelector" class="custom-input" onchange="loadProductToPOS()">
-                        <option value="">-- Seleccionar --</option>
+                        <option value="">-- Manual / Sin seleccionar --</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -231,9 +233,9 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                 <div class="input-group">
-                    <label>Precio Origen (USD)</label>
+                    <label>Costo de Origen (USD)</label>
                     <input type="number" id="productPrice" step="0.01" class="custom-input" placeholder="0.00" oninput="calculate()">
                 </div>
                 <div class="input-group">
@@ -244,13 +246,18 @@
             </div>
 
             <div class="input-group mb-5">
-                <label>Margen Comercial (Autocalcular Venta MXN)</label>
-                <div class="grid grid-cols-4 gap-2">
-                    <button class="btn-option btn-margin" onclick="setMargin(0.10)">+10%</button>
-                    <button class="btn-option btn-margin" onclick="setMargin(0.20)">+20%</button>
-                    <button class="btn-option btn-margin active" onclick="setMargin(0.30)">+30%</button>
-                    <button class="btn-option btn-margin" onclick="setMargin(1.00)">Doble</button>
-                </div>
+                <label>Margen Comercial Automático</label>
+                <select id="marginDropdown" class="custom-input" onchange="calculate()">
+                    <option value="0.10">10%</option>
+                    <option value="0.15">15%</option>
+                    <option value="0.20">20%</option>
+                    <option value="0.25">25%</option>
+                    <option value="0.30" selected>30%</option>
+                    <option value="0.35">35%</option>
+                    <option value="0.40">40%</option>
+                    <option value="0.45">45%</option>
+                    <option value="0.50">50%</option>
+                </select>
             </div>
 
             <div class="input-group mb-5">
@@ -454,18 +461,30 @@
             const tbody = document.getElementById('inventarioTableBody');
             tbody.innerHTML = '';
             let totalUsd = 0;
+            const tc = parseFloat(document.getElementById('globalExchangeRate').value) || 18.50;
 
             inventory.forEach((item) => {
                 totalUsd += item.costoUsd;
-                const tr = document.createElement('tr');
-                const precioTxt = item.precioMxn ? formatoMxn.format(item.precioMxn) : '<span class="text-gray-400 italic">No def.</span>';
+                const costoMxn = item.costoUsd * tc;
                 
+                let precioSugUsdTxt = '<span class="text-gray-400 italic">No def.</span>';
+                let precioSugMxnTxt = '<span class="text-gray-400 italic">No def.</span>';
+
+                if (item.precioMxn !== null) {
+                    const precioUsdFinal = item.precioMxn / tc;
+                    precioSugMxnTxt = formatoMxn.format(item.precioMxn);
+                    precioSugUsdTxt = formatoUsd.format(precioUsdFinal);
+                }
+                
+                const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="px-4 py-3"><span class="badge-cat ${getCatClass(item.cat)}">${item.cat}</span></td>
                     <td class="px-4 py-3 font-medium">${item.desc}</td>
                     <td class="px-4 py-3 text-center">1</td>
                     <td class="px-4 py-3 text-right font-mono">${formatoUsd.format(item.costoUsd)}</td>
-                    <td class="px-4 py-3 text-right font-mono font-bold">${precioTxt}</td>
+                    <td class="px-4 py-3 text-right font-mono text-gray-500">${formatoMxn.format(costoMxn)}</td>
+                    <td class="px-4 py-3 text-right font-mono font-bold" style="color: var(--info)">${precioSugUsdTxt}</td>
+                    <td class="px-4 py-3 text-right font-mono font-bold" style="color: var(--accent-primary)">${precioSugMxnTxt}</td>
                     <td class="px-4 py-3 text-center whitespace-nowrap">
                         <button onclick="sendToPOS(${item.id})" class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded font-bold hover:bg-indigo-100">VENDER</button>
                         <button onclick="deleteItem(${item.id})" class="text-xs text-red-500 ml-2 font-bold hover:text-red-700">X</button>
@@ -511,9 +530,7 @@
             });
         }
 
-
         // --- LÓGICA TERMINAL POS ---
-        let selectedMargin = 0.30;
         let paymentMode = '50/50';
         let currentCalc = null;
 
@@ -530,15 +547,8 @@
             const item = inventory.find(i => i.id == id);
             document.getElementById('productName').value = item.desc;
             document.getElementById('productPrice').value = item.costoUsd;
+            
             document.getElementById('productPriceMXN').value = item.precioMxn ? item.precioMxn : '';
-            calculate();
-        }
-
-        function setMargin(margin) {
-            selectedMargin = margin;
-            document.querySelectorAll('.btn-margin').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('productPriceMXN').value = '';
             calculate();
         }
 
@@ -554,22 +564,28 @@
         }
 
         function overrideFromMXN() {
-            document.querySelectorAll('.btn-margin').forEach(btn => btn.classList.remove('active'));
             calculate();
         }
 
         function calculate() {
             const tc = parseFloat(document.getElementById('globalExchangeRate').value) || 18.50;
             const priceUSD = parseFloat(document.getElementById('productPrice').value) || 0;
-            const manualPriceMXN = parseFloat(document.getElementById('productPriceMXN').value);
+            const manualSellPrice = parseFloat(document.getElementById('productPriceMXN').value);
+            const marginSelect = parseFloat(document.getElementById('marginDropdown').value) || 0.30;
 
             if(priceUSD === 0) { resetInternalBook(); return; }
 
             const costoMXN = priceUSD * tc;
-            let sellPriceMXN = (!isNaN(manualPriceMXN) && manualPriceMXN > 0) ? manualPriceMXN : costoMXN + (costoMXN * selectedMargin);
+            let sellPriceMXN = 0;
+
+            if(!isNaN(manualSellPrice) && manualSellPrice > 0) {
+                sellPriceMXN = manualSellPrice;
+            } else {
+                sellPriceMXN = costoMXN + (costoMXN * marginSelect); 
+            }
 
             const profitMXN = sellPriceMXN - costoMXN;
-            const marginReal = (profitMXN / sellPriceMXN) * 100;
+            const marginReal = sellPriceMXN > 0 ? (profitMXN / sellPriceMXN) * 100 : 0;
             let advanceMXN = paymentMode === '50/50' ? sellPriceMXN / 2 : sellPriceMXN;
 
             document.getElementById('intBaseCost').innerText = formatoUsd.format(priceUSD);
