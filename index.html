@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gabachin Store | Sistema Unificado</title>
+    <title>Sustentabll Store | Sistema Unificado</title>
     <!-- Fuentes: DM Sans, Playfair Display, DM Mono, Libre Barcode 128 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -132,7 +132,7 @@
 <body>
 
     <header class="top-bar">
-        <div class="logo">GABACHIN STORE</div>
+        <div class="logo">SUSTENTABLL STORE</div>
         <div class="flex items-center gap-6">
             <div class="flex items-center gap-2">
                 <span class="text-sm font-semibold" style="color: var(--text-muted)">T.C. (MXN)</span>
@@ -189,19 +189,14 @@
                 <div>
                     <label class="text-xs font-bold text-gray-500 uppercase">Cat</label>
                     <select id="newCat" class="custom-input" style="padding: 10px;">
-                        <option value="Tenis">Tenis</option>
-                        <option value="Bolsas">Bolsas</option>
-                        <option value="Gorras">Gorras</option>
-                        <option value="Cinturones">Cinturones</option>
+                        <option value="Tenis">Playera</option>
+                        <option value="Bolsas">Hoodie</option>
+                        <option value="Gorras">Polos</option>
                     </select>
                 </div>
                 <div class="md:col-span-2">
                     <label class="text-xs font-bold text-gray-500 uppercase">Descripción</label>
                     <input type="text" id="newDesc" required class="custom-input" style="padding: 10px;" placeholder="Ej. Adidas Samba">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-gray-500 uppercase">Costo USD</label>
-                    <input type="number" id="newCosto" step="0.01" required class="custom-input" style="padding: 10px;" placeholder="0.00">
                 </div>
                 <div>
                     <label class="text-xs font-bold text-gray-500 uppercase">Precio MXN</label>
@@ -235,11 +230,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                 <div class="input-group">
-                    <label>Costo de Origen (USD)</label>
-                    <input type="number" id="productPrice" step="0.01" class="custom-input" placeholder="0.00" oninput="calculate()">
-                </div>
-                <div class="input-group">
-                    <label>Precio Venta (MXN) - Opcional</label>
+                    <label>Precio Venta (MXN)</label>
                     <input type="number" id="productPriceMXN" step="0.01" class="custom-input" placeholder="0.00" oninput="overrideFromMXN()">
                     <span class="text-xs text-gray-400 mt-1 block">*Si llenas esto, ignora el margen</span>
                 </div>
@@ -296,11 +287,11 @@
         <section class="receipt-container">
             <div id="ticketView" class="receipt">
                 <div class="receipt-logo">
-                    <h2>GABACHIN</h2>
+                    <h2>Sustentabll</h2>
                 </div>
                 <div class="receipt-header-info">
-                    BOUTIQUE DE IMPORTACIÓN<br>
-                    Miramar, FL — Minatitlán, VER<br>
+                    BOUTIQUE DE IMPORTACIÓN SUSTENTABLE<br>
+                   Puebla<br>
                     ORDEN: <span id="tkOrderNumber">#ORD-0000</span><br>
                     FECHA: <span id="tkDate">00/00/0000</span>
                 </div>
@@ -346,7 +337,7 @@
                     <div id="tkBadge" class="badge-status">ESTADO: POR PAGAR</div>
                 </div>
 
-                <div class="barcode" id="tkBarcode">GABACHIN</div>
+                <div class="barcode" id="tkBarcode">Sustentabll</div>
                 
                 <div style="text-align: center; font-size: 0.70rem; margin-top: 10px; font-weight: 600;">
                     GRACIAS POR SU COMPRA
